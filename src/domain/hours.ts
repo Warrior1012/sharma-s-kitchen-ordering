@@ -3,7 +3,7 @@ import type { OpeningWindow, StoreSettings } from "./types";
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function to12h(t: string): string {
-  const [h, m] = t.split(":").map(Number);
+  const h = Number(t.slice(0, 2));\n  const m = Number(t.slice(3, 5));
   const suffix = h >= 12 ? "pm" : "am";
   const hh = h % 12 === 0 ? 12 : h % 12;
   return m ? `${hh}:${String(m).padStart(2, "0")}${suffix}` : `${hh}${suffix}`;
@@ -12,7 +12,7 @@ function to12h(t: string): string {
 export function weeklyHours(windows: OpeningWindow[]): { day: string; hours: string }[] {
   return [1, 2, 3, 4, 5, 6, 0].map((d) => {
     const w = windows.filter((x) => x.day === d);
-    return { day: DAYS[d], hours: w.length ? w.map((x) => `${to12h(x.open)} to ${to12h(x.close)}`).join(", ") : "Closed" };
+    return { day: DAYS[d] ?? "Unknown", hours: w.length ? w.map((x) => `${to12h(x.open)} to ${to12h(x.close)}`).join(", ") : "Closed" };
   });
 }
 
