@@ -3,7 +3,8 @@ import type { OpeningWindow, StoreSettings } from "./types";
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function to12h(t: string): string {
-  const h = Number(t.slice(0, 2));\n  const m = Number(t.slice(3, 5));
+  const h = Number(t.slice(0, 2));
+  const m = Number(t.slice(3, 5));
   const suffix = h >= 12 ? "pm" : "am";
   const hh = h % 12 === 0 ? 12 : h % 12;
   return m ? `${hh}:${String(m).padStart(2, "0")}${suffix}` : `${hh}${suffix}`;
