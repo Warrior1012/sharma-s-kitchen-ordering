@@ -1,7 +1,6 @@
 /**
- * Domain models. These mirror the planned database tables
- * (categories, menu_items, store_settings, orders, order_items, order_counters, admin_users).
- * All money values are integer paise (1 rupee = 100 paise).
+ * Domain models. All money values are integer paise (1 rupee = 100 paise).
+ * Optional image/contact fields are only populated when an admin supplies them.
  */
 export type Paise = number;
 
@@ -26,12 +25,15 @@ export interface MenuItem {
   isAvailable: boolean;
   imageKey: ImageKey | null;
   sortOrder: number;
+  isPopular?: boolean;
+  /** Compressed demo image stored locally. Production images belong in object storage. */
+  imageUrl?: string | null;
 }
 
 /** 0 = Sunday ... 6 = Saturday. A day with no entry is closed. */
 export interface OpeningWindow {
   day: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-  open: string; // "HH:MM" 24h, in store timezone
+  open: string;
   close: string;
 }
 
@@ -49,7 +51,6 @@ export interface StoreSettings {
   deliveryFeePaise: Paise;
   minimumOrderPaise: Paise;
   acceptingOrders: boolean;
-  /** Unknown values stay null and are hidden in the UI. */
   phone: string | null;
   email: string | null;
   address: string | null;
@@ -57,6 +58,8 @@ export interface StoreSettings {
   upiId: string | null;
   upiPayeeName: string | null;
   socialLinks: SocialLink[];
+  whatsapp?: string | null;
+  upiQrDataUrl?: string | null;
 }
 
 export type FulfilmentType = "delivery" | "takeaway";
@@ -96,8 +99,8 @@ export interface Order {
   items: OrderItem[];
   createdAt: string;
   updatedAt: string;
-  /** Always true until a real backend exists. */
   isDemo: boolean;
+  cancelReason?: string | null;
 }
 
 export interface OrderItem {
@@ -112,7 +115,6 @@ export interface OrderItem {
 }
 
 export interface OrderCounter {
-  /** Business date in store timezone, YYYY-MM-DD. */
   businessDate: string;
   lastValue: number;
 }

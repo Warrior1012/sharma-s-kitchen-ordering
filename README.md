@@ -1,30 +1,94 @@
-# Sharma's Kitchen Ordering
+# Sharma's Kitchen Ordering Demo
 
-Create a production-minded restaurant ordering app named Sharma's Kitchen. Use Lovable for the frontend, React + TypeScript + Tailwind in the supported Lovable stack. Implement the complete customer experience: Home, Menu with categories/search/veg filters, working demo cart with persisted item IDs and quantities, cart totals/minimum order, validated checkout for delivery/takeaway and COD/UPI, order status demo route, About, Contact, Terms, Privacy, Refund policy, 404. Also create an admin UI shell with login, live-order dashboard layout, order details/status transitions, menu/category manager and settings. Until a real Supabase backend is connected, clearly label demo mode, use seed data only, never claim real orders/payments/security, and keep admin demo-gated. Use typed repository/service interfaces for later Supabase integration. Do not connect to unrelated existing Supabase projects or create a paid backend automatically.
+A responsive restaurant-ordering portfolio project built with React 19, TypeScript, TanStack Start, TanStack Router, Tailwind CSS, TanStack Query, Zod and Lucide icons.
 
-Visual system: cream #FAF3E7, dark brown #3B2415, orange #D9631E, Fraunces headings, DM Sans body, 8px grid, max width 1200px, 8px cards, 6-8px button radius, Lucide icons. Veg green square-dot, non-veg red square-dot. Premium warm Indian restaurant feel, no purple gradients, emojis, pill buttons, fake reviews/counters/metrics, em dashes, or AI badges. Use replaceable clearly-demo food imagery, optimized and alt-tagged. Subtle 150-300ms motion and prefers-reduced-motion. Mobile-first at 360/390/768/1280.
+**This is a fictional portfolio demo, not a live restaurant.** Menu items, prices, food images, business hours and order records are sample data. No order is transmitted to a kitchen, no payment is collected, and no delivery or pickup is arranged.
 
-Business defaults are configurable demo values only: Tue-Sun 11am-11pm IST, Monday closed, 5km radius, ₹30 delivery, ₹150 minimum. Hide unknown address, phone, FSSAI, owner story, UPI, QR and social links rather than invent them. Checkout validation: name 2-60 chars, Indian mobile 10 digits starting 6-9, delivery address 10-200 chars, sector required, 6-digit pincode required, optional landmark and note max 200, UPI requires 12-digit UTR. Display exact UPI amount only when real config exists. Cart price must be treated as server-authoritative once backend exists; money domain values integer paise. No frontend-only enforcement of opening hours or price authority.
+## What is included
 
-Build typed models for categories, menu_items, store_settings, orders, order_items, order_counters, admin_users. Provide README, .env.example with placeholders, architecture notes, demo limitations, QA checklist, per-page SEO metadata, configured-field-only restaurant JSON-LD, sitemap/robots/favicon where supported. Accessibility: semantic HTML, keyboard navigation, visible focus, labels, contrast. Include robust loading/empty/error/unavailable/success states. Make all demo customer flows genuinely usable, no dead buttons. Clearly document backend work still required: Supabase schema/RLS, secure server-side transactional place_order, random 256-bit status token with hash storage, admin role checks, realtime, storage, shared rate limiting, unique UTR, secret keys server-only. Do not imply backend features are implemented before they are.
+### Customer experience
+- Home page with sample dishes, ordering steps, delivery information and opening hours.
+- Menu with categories, search, vegetarian/non-vegetarian filters, availability, popular tags and quantity controls.
+- Persistent cart storing only item IDs and quantities, with price and total calculations in integer paise.
+- Checkout for delivery or takeaway, with Indian mobile number, address, PIN code, note and UPI UTR validation.
+- Cash-on-delivery demo flow. UPI is hidden until a UPI ID and payee name are configured in the demo settings.
+- Simulated order confirmation and tracking, refreshed every 15 seconds.
+- About, Contact, Terms, Privacy and Cancellation/Refund pages.
+- Favicon, robots.txt, sitemap.xml, page metadata and configured-field-only Restaurant JSON-LD.
 
-This project was built with [Lovable](https://lovable.dev).
+### Owner dashboard
+Open **/admin** and use any valid email address plus a non-empty demo password. This is a session flag, not authentication.
 
-## Build with Lovable
+- Order queue with today/all filters, status and payment filters, search, pending count and daily sample sales.
+- Order detail with customer/contact fields, item and price snapshots, status transitions, cancellation reason, UTR display and manual demo payment verification.
+- Menu item create/edit, price and category changes, veg/popular/availability flags, compressed JPG/PNG/WebP image uploads and archive/restore.
+- Category add/rename/reorder/hide.
+- Store hours, accepting-orders switch, delivery fee, minimum order, radius, phone, WhatsApp, email, address, FSSAI and UPI demo settings.
+- Reset control to clear local demo orders, menu edits, settings and cart.
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/66c51ab8-8cbb-478e-bdcb-1daecd8ac101).
+## Run locally
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+The repository includes a Bun lockfile.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+bun install --frozen-lockfile
+bun run dev
 ```
+
+Other checks:
+
+```sh
+bun run test
+bunx tsc --noEmit
+bun run build
+bun run lint
+```
+
+## Demo behaviour and boundaries
+
+All order, menu, category and settings data is stored in the current browser's local storage. The demo admin flag is stored in session storage. The dashboard polls browser storage; it is not a realtime server connection and another person on another device will not see these orders.
+
+The order repository deliberately mirrors some production validation steps: current menu lookup, item availability, positive bounded quantities, opening hours, minimum order, integer-paise totals and duplicate UTR detection within this browser. These checks are **client-side demo logic only**. They are not a security boundary and can be bypassed by a browser user.
+
+Use fictional test details. Do not enter real customer information, real payment references, bank credentials or production passwords. A demo tracking URL is not a secure token URL.
+
+Business phone, WhatsApp, address, email, FSSAI, UPI ID, payee and QR details are blank by default. Only configure values supplied by the actual business. No owner identity, restaurant story, licence, map pin, social profile, review, award or operating claim has been invented.
+
+To test checkout when the sample business is closed, open **/admin → Settings**, enable accepting orders, and select today's IST weekday with an opening window that contains the current IST time. Default hours are Tuesday to Sunday, 11:00 to 23:00 IST, with Monday closed.
+
+## Architecture
+
+- `src/domain`: typed entities, cart calculations, checkout schema, opening-hours checks, currency formatting and order-status transitions.
+- `src/repositories`: repository interfaces and the local-storage demo implementation. A real backend adapter can replace the demo implementation without rewriting the page layer.
+- `src/routes`: file-based customer and owner routes.
+- `src/components/site`: shared site navigation, footer, design primitives and menu cards.
+- `src/data`: editable sample menu and replaceable demo dish imagery.
+- `src/test` and domain test files: route and domain QA.
+
+## Production work still required
+
+This repository is a complete *showcaseable demo*, not a production ordering service. Before a real restaurant uses it, implement and security-review:
+
+1. Supabase/Postgres schema and migrations for categories, menu items, store settings, orders, order items, daily counters and admin users.
+2. RLS that exposes only public menu/settings data. Order records and admin operations must be unavailable to anonymous users.
+3. Supabase Auth with owner/staff role checks on every server-side admin action. Replace the demo sign-in immediately.
+4. A transactional server-side `place_order` path that recalculates database prices, checks opening hours and availability, enforces minimum order and quantity limits, applies the delivery fee, atomically allocates an order number and stores item price/name snapshots.
+5. Random 256-bit order access tokens with only token hashes persisted, plus rate limiting for checkout and login.
+6. A unique database constraint for UTR values, manual bank verification workflow and audited status changes.
+7. Realtime order updates, server-side storage for uploaded images, backups, monitoring and operational email/WhatsApp integrations.
+8. Real business content, legal review of policies, domain-specific sitemap/robots URLs, payment-provider approval and accessibility/performance testing on actual devices.
+
+Never put a Supabase service-role key in browser code or any `VITE_*` variable. `.env.example` contains placeholders only.
+
+## Design and accessibility
+
+Warm cream, dark brown and orange palette; Fraunces display font and DM Sans body font; 6-8px button radius; Lucide icons; visible focus states; semantic labels; reduced-motion support; responsive layouts for phone, tablet and desktop. Food illustrations are labelled as demo imagery and should be replaced with client-owned photos before commercial use.
+
+## Deployment notes
+
+The current sitemap points at the Lovable preview hostname. Replace those URLs and the canonical/metadata URLs when the project receives its final public domain. Review privacy, terms and refund copy before any real commercial launch.
+
+## Repository
+
+- GitHub: https://github.com/Warrior1012/sharma-s-kitchen-ordering
+- Lovable editor: https://lovable.dev/projects/66c51ab8-8cbb-478e-bdcb-1daecd8ac101
