@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { CheckCircle2, Copy } from "lucide-react";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Button, PageHeader, fieldClass } from "@/components/site/ui";
 import { checkoutSchema, type CheckoutInput } from "@/domain/checkout-schema";
 import { isStoreOpen } from "@/domain/hours";
@@ -45,7 +45,7 @@ function CheckoutPage() {
     setMessage("");
   }
 
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
     const parsed = checkoutSchema.safeParse(form);
