@@ -1,6 +1,6 @@
 import type { CartLine, FulfilmentType, MenuItem, Paise, StoreSettings } from "./types";
 
-export const MAX_QTY_PER_ITEM = 20;
+export const MAX_QTY_PER_ITEM = 50;
 
 export interface ResolvedLine {
   item: MenuItem;
@@ -10,7 +10,6 @@ export interface ResolvedLine {
 
 export interface CartTotals {
   lines: ResolvedLine[];
-  /** Cart IDs that no longer exist or are unavailable. */
   unavailableIds: string[];
   itemCount: number;
   subtotalPaise: Paise;
@@ -20,10 +19,7 @@ export interface CartTotals {
   shortfallPaise: Paise;
 }
 
-/**
- * Display estimate only. Once a backend exists the server recomputes every price
- * from the database inside place_order and its result is authoritative.
- */
+/** Display estimate only. The connected production backend must recompute totals from the database. */
 export function computeTotals(
   cart: CartLine[],
   menu: MenuItem[],
@@ -33,19 +29,18 @@ export function computeTotals(
   const byId = new Map(menu.map((m) => [m.id, m]));
   const lines: ResolvedLine[] = [];
   const unavailableIds: string[] = [];
-  for (const l of cart) {
-    const item = byId.get(l.menuItemId);
+  for (const line of cart) {
+    const item = byId.get(line.menuItemId);
     if (!item || !item.isAvailable) {
-      unavailableIds.push(l.menuItemId);
+      unavailableIds.push(line.menuItemId);
       continue;
     }
-    const q = clampQty(l.quantity);
-    if (q === 0) continue;
-    lines.push({ item, quantity: q, lineTotalPaise: item.pricePaise * q });
+    const quantity = clampQty(line.quantity);
+    if (quantity > 0) lines.push({ item, quantity, lineTotalPaise: item.pricePaise * quantity });
   }
-  const subtotalPaise = lines.reduce((s, l) => s + l.lineTotalPaise, 0);
-  const itemCount = lines.reduce((s, l) => s + l.quantity, 0);
-  const deliveryFeePaise = fulfilment === "delivery" && lines.length > 0 ? settings.deliveryFeePaise : 0;
+  const subtotalPaise = lines.reduce((sum, line) => sum + line.lineTotalPaise, 0);
+  const itemCount = lines.reduce((sum, line) => sum + line.quantity, 0);
+  const deliveryFeePaise = fulfilment === "delivery" && lines.length ? settings.deliveryFeePaise : 0;
   const meetsMinimum = subtotalPaise >= settings.minimumOrderPaise;
   return {
     lines,
@@ -59,7 +54,7 @@ export function computeTotals(
   };
 }
 
-export function clampQty(q: number): number {
-  if (!Number.isFinite(q)) return 0;
-  return Math.max(0, Math.min(MAX_QTY_PER_ITEM, Math.floor(q)));
+export function clampQty(quantity: number): number {
+  if (!Number.isFinite(quantity)) return 0;
+  return Math.max(0, Math.min(MAX_QTY_PER_ITEM, Math.floor(quantity)));
 }
