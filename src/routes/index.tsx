@@ -19,8 +19,8 @@ export const Route = createFileRoute("/")({
       servesCuisine: settings.cuisine,
       openingHours: schemaOpeningHours(settings.openingHours),
     };
-    if (settings.phone) jsonLd.telephone = settings.phone;
-    if (settings.address) jsonLd.address = settings.address;
+    if (settings.phone) jsonLd["telephone"] = settings.phone;
+    if (settings.address) jsonLd["address"] = settings.address;
     return {
       ...pageMeta("North Indian food, made for your table", "Explore a sample restaurant menu, build a cart and try the demo ordering flow.", { path: "/" }),
       scripts: [{ type: "application/ld+json", children: JSON.stringify(jsonLd) }],
