@@ -49,7 +49,8 @@ export function storeClock(now = new Date(), timeZone = "Asia/Kolkata"): StoreCl
 }
 
 function minutesOf(value: string): number {
-  const [hour, minute] = value.split(":").map(Number);
+  const hour = Number(value.slice(0, 2));
+  const minute = Number(value.slice(3, 5));
   return hour * 60 + minute;
 }
 
