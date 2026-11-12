@@ -20,7 +20,7 @@ describe("cart calculations", () => {
   it("rejects the minimum boundary below ₹150 and accepts exactly ₹150", () => {
     const item = { ...SEED_MENU[0]!, pricePaise: 14900 };
     const below = computeTotals([{ menuItemId: item.id, quantity: 1 }], [item], SEED_SETTINGS, "takeaway");
-    const exact = computeTotals([{ menuItemId: item.id, quantity: 1 }], [{ ...item, pricePaise: 15000 }], SEED_MENU.length ? SEED_SETTINGS : SEED_SETTINGS, "takeaway");
+    const exact = computeTotals([{ menuItemId: item.id, quantity: 1 }], [{ ...item, pricePaise: 15000 }], SEED_SETTINGS, "takeaway");
     expect(below.meetsMinimum).toBe(false);
     expect(below.shortfallPaise).toBe(100);
     expect(exact.meetsMinimum).toBe(true);
