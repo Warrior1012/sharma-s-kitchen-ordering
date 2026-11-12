@@ -11,4 +11,4 @@ User-agent: facebookexternalhit
 Allow: /
 
 User-agent: *
-Allow: /\n\nSitemap: https://id-preview--66c51ab8-8cbb-478e-bdcb-1daecd8ac101.lovable.app/sitemap.xml\n
+Allow: /\n\nSitemap: https://sharmas-kitchen-ordering.lovable.app/sitemap.xml

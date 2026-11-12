@@ -88,6 +88,11 @@ Warm cream, dark brown and orange palette; Fraunces display font and DM Sans bod
 
 The current sitemap points at the Lovable preview hostname. Replace those URLs and the canonical/metadata URLs when the project receives its final public domain. Review privacy, terms and refund copy before any real commercial launch.
 
+## Live demo
+
+- Public site: https://sharmas-kitchen-ordering.lovable.app
+- Preview: https://id-preview--66c51ab8-8cbb-478e-bdcb-1daecd8ac101.lovable.app
+
 ## Repository
 
 - GitHub: https://github.com/Warrior1012/sharma-s-kitchen-ordering
