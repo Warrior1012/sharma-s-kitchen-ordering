@@ -14,7 +14,7 @@ import { computeTotals } from "@/domain/cart";
 
 export const Route = createFileRoute("/checkout")({
   validateSearch: (search: Record<string, unknown>) => ({
-    fulfilment: search.fulfilment === "takeaway" ? "takeaway" as const : "delivery" as const,
+    fulfilment: search["fulfilment"] === "takeaway" ? "takeaway" as const : "delivery" as const,
   }),
   head: () => pageMeta("Checkout", "Complete the sample order checkout flow.", { path: "/checkout", noindex: true }),
   component: CheckoutPage,
