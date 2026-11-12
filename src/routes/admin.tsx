@@ -350,8 +350,9 @@ function MenuPanel() {
       if (editingId) await menuRepo.updateMenuItem(editingId, payload);
       else await menuRepo.createMenuItem(payload);
       await queryClient.invalidateQueries({ queryKey: ["menu-items"] });
-      setSuccess(editingId ? "Menu item updated." : "Menu item added.");
+      const message = editingId ? "Menu item updated." : "Menu item added.";
       reset();
+      setSuccess(message);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save this menu item.");
     } finally {
